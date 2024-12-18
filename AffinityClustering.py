@@ -279,89 +279,146 @@ def find_differences(contracted_leader_list):
 
 
 
+# def main():
+#     parser = ArgumentParser()
+#     parser.add_argument('--epsilon', help='epsilon [default=1/8]', type=float, default=1 / 8)
+#     parser.add_argument('--machines', help='Number of machines [default=1]', type=int, default=1)
+#     parser.add_argument('--buckets', help='Use buckets [default=False]', action='store_true')
+#     parser.add_argument('--getdata', help='save data to file', action='store_true')
+#     parser.add_argument('--datasets', help='use sklearn datasets', action='store_true')
+#     parser.add_argument('--test', help='Test', action='store_true')
+#     args = parser.parse_args()
+
+#     print('Start generating MST')
+#     if args.test:
+#         print('Test argument given')
+
+#     start_time = datetime.now()
+#     print('Starting time:', start_time)
+
+#     file_location = 'Results_buckets/'
+#     plotter = Plotter(None, None, file_location)
+
+#     # Read data
+#     data_reader = DataReader()
+#     loc = 'datasets/sklearn/data_two_circles.csv'
+#     # V, size, E = data_reader.read_data_set_from_txtfile(loc)
+#     V, size = data_reader.read_vertex_list(loc)
+#     # loc = 'datasets/housing.csv'
+#     # V, size = data_reader.read_csv_columns(loc, ['Latitude', 'Longitude'])
+#     print('Read dataset: ', loc)
+
+#     # Parameters
+#     beta = 0.2  # 0 <= beta <= 1 (buckets)
+#     alpha = 0.1  # shift of buckets
+#     gamma = 0.05  # shift of edge weights
+
+#     add_noise = False
+#     if add_noise:
+#         dm = DataModifier()
+#         # V, size = dm.add_gaussian_noise(V)
+#         V, size = dm.add_clustered_noise(V, 'horizontal_line')
+
+#     if args.test:
+#         E, size, vertex_coordinates, W = data_reader.create_distance_matrix(V, full_dm=True)
+#         for i in range(10):
+#             E_copy = deepcopy(E)
+#             E_changed, W = shift_edge_weights(E_copy, gamma)
+#             E_changed, buckets, counter = create_buckets(E_changed, alpha, beta, W)
+#             print('Run', i)
+#             print('Buckets: ', buckets)
+#             print('Counter: ', counter)
+#         quit()
+
+
+#     # runs, graph, yhats, contracted_leader, mst = run(V, len(V) - 1, data_reader, beta, alpha, gamma, buckets=args.buckets)
+#     # print('Graph size: ', len(graph), graph)
+#     # print('Runs: ', runs)
+#     # print('yhats: ', yhats[runs - 1])
+#     # plotter.plot_cluster(yhats[runs - 1], mst, V)
+#     # quit()
+
+#     # Toy datasets
+#     datasets = get_clustering_data()
+#     datasets = datasets[0:5]
+#     timestamp = datetime.now()
+#     names_datasets = ['TwoCircles', 'TwoMoons', 'Varied', 'Aniso', 'Blobs', 'Random', 'swissroll', 'sshape']
+#     cnt = 0
+#     diff = []
+#     for dataset in datasets:
+#         if not args.datasets:
+#             continue
+
+#         V = [item for item in dataset[0][0]]
+
+#         if add_noise:
+#             dm = DataModifier()
+#             # V, size = dm.add_gaussian_noise(V)
+#             V, size = dm.add_clustered_noise(V, 'circle')
+
+#         if args.getdata:
+#             with open('test.csv', 'w') as f:
+#                 writer = csv.writer(f)
+#                 for line in dataset[0][0]:
+#                     writer.writerow(line)
+#             quit()
+
+#         plotter.set_dataset(names_datasets[cnt])
+#         plotter.update_string()
+#         plotter.reset_round()
+#         runs_list, graph_list, yhats_list, contracted_leader_list, msts = [], [], [], [], []
+#         for i in range(10):
+#             runs, graph, yhats, contracted_leader, mst = run(V, len(V) - 1, data_reader, beta, alpha, gamma,
+#                                                         buckets=args.buckets)
+#             runs_list.append(runs)
+#             graph_list.append(graph)
+#             yhats_list.append(yhats),
+#             contracted_leader_list.append(contracted_leader)
+#             msts.append(mst)
+#             # plotter.plot_cluster(yhats[runs - 1], mst, V)
+#             # plotter.next_round()
+#             print('Graph size: ', len(graph), graph)
+#             print('Runs: ', runs)
+#             # print('yhats: ', yhats[runs - 1])
+#         diff.append(find_differences(msts))
+#         cnt += 1
+
+#     for item in diff:
+#         print(item)
+
 def main():
     parser = ArgumentParser()
-    parser.add_argument('--epsilon', help='epsilon [default=1/8]', type=float, default=1 / 8)
-    parser.add_argument('--machines', help='Number of machines [default=1]', type=int, default=1)
     parser.add_argument('--buckets', help='Use buckets [default=False]', action='store_true')
-    parser.add_argument('--getdata', help='save data to file', action='store_true')
-    parser.add_argument('--datasets', help='use sklearn datasets', action='store_true')
-    parser.add_argument('--test', help='Test', action='store_true')
     args = parser.parse_args()
-
-    print('Start generating MST')
-    if args.test:
-        print('Test argument given')
 
     start_time = datetime.now()
     print('Starting time:', start_time)
-
-    file_location = 'Results_buckets/'
-    plotter = Plotter(None, None, file_location)
-
-    # Read data
-    data_reader = DataReader()
-    loc = 'datasets/sklearn/data_two_circles.csv'
-    # V, size, E = data_reader.read_data_set_from_txtfile(loc)
-    V, size = data_reader.read_vertex_list(loc)
-    # loc = 'datasets/housing.csv'
-    # V, size = data_reader.read_csv_columns(loc, ['Latitude', 'Longitude'])
-    print('Read dataset: ', loc)
 
     # Parameters
     beta = 0.2  # 0 <= beta <= 1 (buckets)
     alpha = 0.1  # shift of buckets
     gamma = 0.05  # shift of edge weights
 
-    add_noise = False
-    if add_noise:
-        dm = DataModifier()
-        # V, size = dm.add_gaussian_noise(V)
-        V, size = dm.add_clustered_noise(V, 'horizontal_line')
-
-    if args.test:
-        E, size, vertex_coordinates, W = data_reader.create_distance_matrix(V, full_dm=True)
-        for i in range(10):
-            E_copy = deepcopy(E)
-            E_changed, W = shift_edge_weights(E_copy, gamma)
-            E_changed, buckets, counter = create_buckets(E_changed, alpha, beta, W)
-            print('Run', i)
-            print('Buckets: ', buckets)
-            print('Counter: ', counter)
-        quit()
-
-
-    # runs, graph, yhats, contracted_leader, mst = run(V, len(V) - 1, data_reader, beta, alpha, gamma, buckets=args.buckets)
-    # print('Graph size: ', len(graph), graph)
-    # print('Runs: ', runs)
-    # print('yhats: ', yhats[runs - 1])
-    # plotter.plot_cluster(yhats[runs - 1], mst, V)
-    # quit()
-
-    # Toy datasets
     datasets = get_clustering_data()
     datasets = datasets[0:5]
     timestamp = datetime.now()
     names_datasets = ['TwoCircles', 'TwoMoons', 'Varied', 'Aniso', 'Blobs', 'Random', 'swissroll', 'sshape']
     cnt = 0
     diff = []
-    for dataset in datasets:
-        if not args.datasets:
-            continue
 
+    add_noise = False
+
+    file_location = 'Results_buckets/'
+    plotter = Plotter(None, None, file_location)
+    data_reader = DataReader()
+
+    for dataset in datasets:
         V = [item for item in dataset[0][0]]
+        print(V[0])
 
         if add_noise:
             dm = DataModifier()
-            # V, size = dm.add_gaussian_noise(V)
-            V, size = dm.add_clustered_noise(V, 'circle')
-
-        if args.getdata:
-            with open('test.csv', 'w') as f:
-                writer = csv.writer(f)
-                for line in dataset[0][0]:
-                    writer.writerow(line)
-            quit()
+            V, size = dm.add_gaussian_noise(V)
 
         plotter.set_dataset(names_datasets[cnt])
         plotter.update_string()
@@ -371,20 +428,17 @@ def main():
             runs, graph, yhats, contracted_leader, mst = run(V, len(V) - 1, data_reader, beta, alpha, gamma,
                                                         buckets=args.buckets)
             runs_list.append(runs)
-            graph_list.append(graph)
+            graph_list.append(graph) 
             yhats_list.append(yhats),
             contracted_leader_list.append(contracted_leader)
             msts.append(mst)
-            # plotter.plot_cluster(yhats[runs - 1], mst, V)
-            # plotter.next_round()
             print('Graph size: ', len(graph), graph)
             print('Runs: ', runs)
-            # print('yhats: ', yhats[runs - 1])
         diff.append(find_differences(msts))
         cnt += 1
-
     for item in diff:
         print(item)
+    
 
 def run(V, k, data_reader, beta=0.0, alpha=0.0, gamma=0.0, buckets=False):
     if buckets:

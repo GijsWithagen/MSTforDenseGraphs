@@ -104,7 +104,7 @@ for i_dataset, (dataset, algo_params) in enumerate(datasets):
     affinity_propagation = cluster.AffinityPropagation(
         damping=params['damping'], preference=params['preference'])
     average_linkage = cluster.AgglomerativeClustering(
-        linkage="average", affinity="cityblock",
+        linkage="average", 
         n_clusters=params['n_clusters'], connectivity=connectivity)
     birch = cluster.Birch(n_clusters=params['n_clusters'])
     gmm = mixture.GaussianMixture(
